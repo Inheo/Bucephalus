@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -16,7 +16,7 @@ namespace Bucephalus.AssetsManagement
             Addressables.InitializeAsync();
         }
 
-        public async Task<T> Load<T>(AssetReference assetReference) where T : class
+        public async UniTask<T> Load<T>(AssetReference assetReference) where T : class
         {
             if (_completedCache.TryGetValue(assetReference.AssetGUID, out AsyncOperationHandle completedHandle))
                 return completedHandle.Result as T;
@@ -24,7 +24,7 @@ namespace Bucephalus.AssetsManagement
             return await RunWithCacheOnComplete(Addressables.LoadAssetAsync<T>(assetReference), assetReference.AssetGUID);
         }
 
-        public async Task<T> Load<T>(string address) where T : class
+        public async UniTask<T> Load<T>(string address) where T : class
         {
             if (_completedCache.TryGetValue(address, out AsyncOperationHandle completedHandle))
                 return completedHandle.Result as T;
@@ -32,11 +32,11 @@ namespace Bucephalus.AssetsManagement
             return await RunWithCacheOnComplete(Addressables.LoadAssetAsync<T>(address), address);
         }
 
-        public Task<GameObject> Instantiate(string address, Vector3 at) =>
-            Addressables.InstantiateAsync(address, at, Quaternion.identity).Task;
+        public UniTask<GameObject> Instantiate(string address, Vector3 at) =>
+            Addressables.InstantiateAsync(address, at, Quaternion.identity).Task.AsUniTask();
 
-        public Task<GameObject> Instantiate(string address) =>
-            Addressables.InstantiateAsync(address).Task;
+        public UniTask<GameObject> Instantiate(string address) =>
+            Addressables.InstantiateAsync(address).Task.AsUniTask();
 
         public void CleanUp()
         {
@@ -52,7 +52,7 @@ namespace Bucephalus.AssetsManagement
             _handles.Clear();
         }
 
-        private async Task<T> RunWithCacheOnComplete<T>(AsyncOperationHandle<T> handle, string key) where T : class
+        private async UniTask<T> RunWithCacheOnComplete<T>(AsyncOperationHandle<T> handle, string key) where T : class
         {
             handle.Completed += completeHandler =>
             {
