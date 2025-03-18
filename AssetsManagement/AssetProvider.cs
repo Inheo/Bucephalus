@@ -6,7 +6,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Bucephalus.AssetsManagement
 {
-    public class AssetProvider
+    internal class AssetProvider
     {
         private readonly Dictionary<string, AsyncOperationHandle> _completedCache = new Dictionary<string, AsyncOperationHandle>();
         private readonly Dictionary<string, List<AsyncOperationHandle>> _handles = new Dictionary<string, List<AsyncOperationHandle>>();
