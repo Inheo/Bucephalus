@@ -6,7 +6,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Bucephalus.AssetsManagement
 {
-    internal class AssetProvider
+    public class AssetProvider
     {
         private readonly Dictionary<string, AsyncOperationHandle> _completedCache = new Dictionary<string, AsyncOperationHandle>();
         private readonly Dictionary<string, List<AsyncOperationHandle>> _handles = new Dictionary<string, List<AsyncOperationHandle>>();
@@ -14,14 +14,6 @@ namespace Bucephalus.AssetsManagement
         public AssetProvider()
         {
             Addressables.InitializeAsync();
-        }
-
-        public async UniTask<T> Load<T>(AssetReference assetReference) where T : class
-        {
-            if (_completedCache.TryGetValue(assetReference.AssetGUID, out AsyncOperationHandle completedHandle))
-                return completedHandle.Result as T;
-
-            return await RunWithCacheOnComplete(Addressables.LoadAssetAsync<T>(assetReference), assetReference.AssetGUID);
         }
 
         public async UniTask<T> Load<T>(string address) where T : class
@@ -32,11 +24,21 @@ namespace Bucephalus.AssetsManagement
             return await RunWithCacheOnComplete(Addressables.LoadAssetAsync<T>(address), address);
         }
 
-        public UniTask<GameObject> Instantiate(string address, Vector3 at) =>
-            Addressables.InstantiateAsync(address, at, Quaternion.identity).Task.AsUniTask();
-
-        public UniTask<GameObject> Instantiate(string address) =>
-            Addressables.InstantiateAsync(address).Task.AsUniTask();
+        public void Release(string address)
+        {
+            if (_handles.TryGetValue(address, out var resourceHandles))
+            {
+                foreach (var handle in resourceHandles)
+                {
+                    Addressables.Release(handle);
+                }
+            }
+            
+            if (_completedCache.TryGetValue(address, out var completedHandle))
+            {
+                Addressables.Release(completedHandle);
+            }
+        }
 
         public void CleanUp()
         {
