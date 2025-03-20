@@ -1,0 +1,22 @@
+{
+    "name": "com.anastoi.mvcs",
+    "version": "1.0.0",
+    "displayName": "MVCS Framework",
+    "description": "MVCS-pattern for Unity",
+    "unity": "2021.3",
+    "license": "https://github.com/Inheo/Bucephalus/blob/main/LICENSE",
+    "dependencies": {
+      "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git",
+      "com.unity.addressables": "1.19.19",
+      "com.neuecc.unirx": "https://github.com/neuecc/UniRx.git"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/YourName/MVCS-Framework.git"
+    },
+    "author": {
+      "name": "Daniyal",
+      "email": "daniyaljob@gmail.com"
+    }
+  }
+  
