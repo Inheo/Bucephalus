@@ -48,9 +48,9 @@ namespace Bucephalus
                 _viewHandler = viewHandler;
             }
 
-            public async UniTask Preload(ViewBuilder _viewBuilder, Transform _viewRoot, Camera _camera, Action<BaseView> onViewPreloaded)
+            public async UniTask Preload(ViewBuilder viewBuilder, Transform viewRoot, Camera camera, Action<BaseView> onViewPreloaded)
             {
-                var viewGameObject = await _viewBuilder.Build(_viewId, _viewRoot);
+                var viewGameObject = await viewBuilder.Build(_viewId, viewRoot);
                 var view = viewGameObject.GetComponent<BaseView>();
                 Assert.IsNotNull(view, $"[Bucephalus] Fail load view {_viewId}, not find BaseView");
                 
@@ -58,7 +58,7 @@ namespace Bucephalus
                 foreach (var canvas in _canvases)
                 {
                     canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                    canvas.worldCamera = _camera;
+                    canvas.worldCamera = camera;
                     canvas.sortingLayerName = "UI";
                 }
                 
