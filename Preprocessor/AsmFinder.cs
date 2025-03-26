@@ -8,7 +8,6 @@ namespace Bucephalus.Preprocessor
 {
     internal static class AsmFinder
     {
-
         public static IReadOnlyCollection<string> FindViewIds(IEnumerable<Type> types = null)
         {
             types ??= AppDomain.CurrentDomain.GetAssemblies()
